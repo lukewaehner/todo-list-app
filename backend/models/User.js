@@ -6,6 +6,7 @@ const UserSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   invitations: [{ type: Schema.Types.ObjectId, ref: "Invitation" }],
+  emailSchedule: { type: String, default: "daily" },
 });
 
 module.exports = mongoose.model("User", UserSchema);

@@ -10,6 +10,7 @@ const Settings = () => {
   const { user, setUser } = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [emailSchedule, setEmailSchedule] = useState("daily");
   const [groups, setGroups] = useState([]);
   const [newGroup, setNewGroup] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
@@ -60,7 +61,7 @@ const Settings = () => {
     try {
       const res = await axios.put(
         "http://localhost:5001/api/users/me",
-        { name: username, password },
+        { name: username, password, emailSchedule },
         { headers: { "x-auth-token": localStorage.getItem("token") } }
       );
       setUser(res.data);
@@ -173,6 +174,21 @@ const Settings = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-2 border rounded"
               />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Email Schedule</label>
+              <select
+                value={emailSchedule}
+                onChange={(e) => setEmailSchedule(e.target.value)}
+                className="w-full p-2 border rounded"
+              >
+                <option value="hourly">Hourly</option>
+                <option value="three_hours">Every 3 Hours</option>
+                <option value="six_hours">Every 6 Hours</option>
+                <option value="twice_a_day">Twice a Day</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+              </select>
             </div>
             <button
               type="submit"

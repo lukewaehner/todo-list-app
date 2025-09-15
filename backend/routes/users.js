@@ -82,4 +82,30 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
+// Update authenticated user's info
+router.put("/me", auth, async (req, res) => {
+  const { name, password, emailSchedule } = req.body;
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Update user fields
+    if (name) user.name = name;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+    if (emailSchedule) user.emailSchedule = emailSchedule;
+
+    await user.save();
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;
